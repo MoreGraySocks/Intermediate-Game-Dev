@@ -4,13 +4,22 @@ using UnityEngine;
 
 public class ObjectHealth : MonoBehaviour
 {
-    public int maxHealth;
-    private int currentHealth;
+    public float maxHealth = 5;
+    private float currentHealth;
 
+    [SerializeField] HealthBar healthbar;
+
+    public GameObject healthBarObject;
+    public GameObject itemCanvas;
+
+    public int itemCode;
+    public Transform objectTransform;
 
     void Start()
     {
         currentHealth = maxHealth;
+        healthbar = GetComponentInChildren<HealthBar>();
+        healthBarObject.SetActive(false);
     }
 
     void Update()
@@ -18,41 +27,24 @@ public class ObjectHealth : MonoBehaviour
         
     }
 
-    //public void PlayerWeaponDamage(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("PlayerWeapon"))
-    //    {
-    //        currentHealth -= collision.gameObject.GetComponent<HandlePlayerWeapon>().damage;
-    //        if (currentHealth <= 0)
-    //        {
-    //            Deactivate();
-    //        }
-    //    }
-    //}
+    public void TakeDamage(float damage)
+    {
+        healthBarObject.SetActive(true);
+        currentHealth -= damage;
+        healthbar.UpdateHealthBar(currentHealth, maxHealth);
+        Debug.Log("health is " + currentHealth);
+        if (currentHealth <= 0)
+        {
+            GameObject item = Instantiate(itemCanvas, objectTransform.position, Quaternion.Euler(0,0,0));
+            item.GetComponent<PickUpItem>().InitialiseItemDropped(itemCode);
 
-    //public void ProjectileDamage(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Projectile"))
-    //    {
-    //        currentHealth -= collision.gameObject.GetComponent<HandleRanged>().damage;
-    //        if (currentHealth <= 0)
-    //        {
-    //            Deactivate();
-    //        }
-    //    }
-    //}
-
-    //public void EnemyWeaponDamage(Collision collision)
-    //{
-    //    if (collision.gameObject.CompareTag("EnemyWeapon"))
-    //    {
-    //        currentHealth -= collision.gameObject.GetComponent<HandleEnemyWeapon>().damage;
-    //        if (currentHealth <= 0)
-    //        {
-    //            Deactivate();
-    //        }
-    //    }
-    //}
+            if (gameObject.tag == "Enemy")
+            {
+                Death();
+            }
+            else { Deactivate(); }
+        }
+    }
 
     public void Deactivate()
     {

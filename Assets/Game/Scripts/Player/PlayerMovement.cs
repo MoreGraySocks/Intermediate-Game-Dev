@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         //        case > maxWalkSpeed:
         //            playerBody.velocity.x = maxWalkSpeed; break;
         //        case < -maxWalkSpeed:
-        //            playerBody.velocity.x = -maxWalkSpeed; break;     //since left is -right I need to use a negative max speed as well
+        //            playerBody.velocity.x = -maxWalkSpeed; break;
         //    }
 
         //    switch (playerBody.velocity.z) 
